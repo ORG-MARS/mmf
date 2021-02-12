@@ -1,6 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-import sys
 from typing import Any, List, Optional, Tuple
 
 import cv2
@@ -9,10 +8,6 @@ import torch
 import torchvision
 from mmf.utils.features.visualizing_image import SingleImageViz
 from PIL import Image
-
-
-# dynamically add visualization script for importing
-sys.path.append("../..")
 
 
 def visualize_images(
