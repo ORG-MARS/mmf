@@ -16,19 +16,39 @@
  """
 import colorsys
 import io
+import os
 
 import cv2
 import matplotlib as mpl
 import matplotlib.colors as mplc
 import matplotlib.figure as mplfigure
 import numpy as np
+import requests
 import torch
 from matplotlib.backends.backend_agg import FigureCanvasAgg
-
-from utils import img_tensorize
+from PIL import Image
 
 
 _SMALL_OBJ = 1000
+
+
+def get_image_from_url(url):
+    response = requests.get(url)
+    img = np.array(Image.open(io.BytesIO(response.content)))
+    return img
+
+
+def img_tensorize(im, input_format="RGB"):
+    assert isinstance(im, str)
+    if os.path.isfile(im):
+        img = cv2.imread(im)
+    else:
+        img = get_image_from_url(im)
+        assert img is not None, f"could not connect to: {im}"
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    if input_format == "RGB":
+        img = img[:, :, ::-1]
+    return img
 
 
 class SingleImageViz:

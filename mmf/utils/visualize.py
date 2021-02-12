@@ -1,17 +1,14 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 
-import io
 import sys
 from typing import Any, List, Optional, Tuple
 
 import cv2
 import numpy as np
-import PIL.Image
 import torch
 import torchvision
-from IPython.display import Image, display
-
-from tools.scripts.features.frcnn.visualizing_image import SingleImageViz
+from mmf.utils.features.visualizing_image import SingleImageViz
+from PIL import Image
 
 
 # dynamically add visualization script for importing
@@ -73,10 +70,11 @@ def visualize_frcnn_features(image_path, features_path, objids, attrids):
         output_dict.pop("attr_probs"),
     )
 
+    height, width, channels = img.shape
+
     buffer = frcnn_visualizer._get_buffer()[:, :, ::-1]
     array = np.uint8(np.clip(buffer, 0, 255))
-    img = io.BytesIO()
-    fmt = "jpeg"
-    PIL.Image.fromarray(array).save(img, fmt)
 
-    display(Image(data=img.getvalue()))
+    image = Image.fromarray(array)
+
+    visualize_images([image], (height, width))
