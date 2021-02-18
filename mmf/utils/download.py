@@ -12,18 +12,20 @@ These can be replaced if your particular file system does not support them.
 import collections
 import datetime
 import hashlib
+import io
 import json
+import numpy as np
 import os
 import shutil
 import time
 from pathlib import Path
+from PIL import Image
 
 import requests
 import tqdm
 from mmf.utils.distributed import is_master, synchronize
 from mmf.utils.file_io import PathManager
 from mmf.utils.general import get_absolute_path
-
 
 class DownloadableFile:
     """
@@ -491,3 +493,8 @@ def download_from_google_drive(gd_id, destination, redownload=True):
         response.close()
 
     return download
+
+def get_image_from_url(url):
+    response = requests.get(url)
+    img = np.array(Image.open(io.BytesIO(response.content)))
+    return img

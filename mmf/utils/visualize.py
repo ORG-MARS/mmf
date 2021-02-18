@@ -51,11 +51,9 @@ def visualize_images(
 
 
 def visualize_frcnn_features(image_path, features_path, objids, attrids):
-    img = np.array(Image.open(image_path))
+    output_dict = np.load(features_path, allow_pickle=True).item()
 
-    output_dict = np.load(features_path, allow_pickle="TRUE").item()
-
-    frcnn_visualizer = SingleImageViz(img, id2obj=objids, id2attr=attrids)
+    frcnn_visualizer = SingleImageViz(image_path, id2obj=objids, id2attr=attrids)
     frcnn_visualizer.draw_boxes(
         output_dict.get("boxes"),
         output_dict.pop("obj_ids"),

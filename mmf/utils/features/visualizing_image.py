@@ -22,19 +22,13 @@ import matplotlib as mpl
 import matplotlib.colors as mplc
 import matplotlib.figure as mplfigure
 import numpy as np
-import requests
 import torch
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from PIL import Image
+from mmf.utils.download import get_image_from_url
 
 
 _SMALL_OBJ = 1000
-
-
-def get_image_from_url(url):
-    response = requests.get(url)
-    img = np.array(Image.open(io.BytesIO(response.content)))
-    return img
 
 
 def img_tensorize(im, input_format="RGB"):
