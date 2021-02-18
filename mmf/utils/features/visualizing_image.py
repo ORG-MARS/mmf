@@ -18,7 +18,6 @@ import colorsys
 import io
 import os
 
-import cv2
 import matplotlib as mpl
 import matplotlib.colors as mplc
 import matplotlib.figure as mplfigure
@@ -41,13 +40,10 @@ def get_image_from_url(url):
 def img_tensorize(im, input_format="RGB"):
     assert isinstance(im, str)
     if os.path.isfile(im):
-        img = cv2.imread(im)
+        img = np.array(Image.open(image_path))
     else:
         img = get_image_from_url(im)
         assert img is not None, f"could not connect to: {im}"
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    if input_format == "RGB":
-        img = img[:, :, ::-1]
     return img
 
 
@@ -208,7 +204,8 @@ class SingleImageViz:
         if saveas is None:
             saveas = self.saveas
         if saveas.lower().endswith(".jpg") or saveas.lower().endswith(".png"):
-            cv2.imwrite(saveas, self._get_buffer()[:, :, ::-1])
+            im = Image.open(self._get_buffer()[:, :, ::-1])
+            im.save(saveas)
         else:
             self.fig.savefig(saveas)
 
@@ -245,7 +242,8 @@ class SingleImageViz:
         if not self.pynb:
             s, (width, height) = self.canvas.print_to_buffer()
             if (width, height) != (self.width, self.height):
-                img = cv2.resize(self.img, (width, height))
+                img = Image.fromarray(self.img.astype('uint8', 'RGB'))
+                img.resize((width, height))
             else:
                 img = self.img
         else:

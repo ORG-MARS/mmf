@@ -2,7 +2,6 @@
 
 from typing import Any, List, Optional, Tuple
 
-import cv2
 import numpy as np
 import torch
 import torchvision
@@ -52,7 +51,7 @@ def visualize_images(
 
 
 def visualize_frcnn_features(image_path, features_path, objids, attrids):
-    img = cv2.imread(image_path)
+    img = np.array(Image.open(image_path))
 
     output_dict = np.load(features_path, allow_pickle="TRUE").item()
 
